@@ -1,15 +1,29 @@
-document.addEventListener('DOMContentLoaded', function() {
-    function checkTime() {
-        const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
+let time = 3600; // 60 minutes in seconds
 
-        if (hours === 1 && minutes === 0) {
-            window.location.href = 'https://quizleapsbooks.github.io/QuizLeapBooks-Test_Started/';
-        } else {
-            setTimeout(checkTime, 60000);
-        }
+const timerElement = document.getElementById('timer');
+const quizForm = document.getElementById('quizForm');
+const timeOverMessage = document.getElementById('timeOverMessage');
+
+const updateTimer = () => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    timerElement.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    time--;
+
+    if (time < 0) {
+        clearInterval(timerInterval);
+        quizForm.submit();
+        timeOverMessage.classList.remove('hidden');
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 10000);
     }
+};
 
-    checkTime(); 
-});
+window.onload = () => {
+    updateTimer(); 
+    setInterval(updateTimer, 1000);
+};
+
+
+
